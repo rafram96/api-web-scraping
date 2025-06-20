@@ -7,6 +7,7 @@ provider:
   # Default memory size for functions (default: 1024MB)
   memorySize: 1024
   timeout: 30
+  stage: ${opt:stage, 'dev'}
   iam:
     role: arn:aws:iam::969784661290:role/LabRole
 
@@ -36,3 +37,8 @@ resources:
           - AttributeName: id
             KeyType: HASH
         BillingMode: PAY_PER_REQUEST
+    # BUCKET DEPLOY   
+    MyS3Bucket:
+      Type: AWS::S3::Bucket
+      Properties:
+        BucketName: my-s3rrh-bucket-${sls:stage}-${aws:accountId}
