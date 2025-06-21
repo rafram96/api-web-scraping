@@ -23,6 +23,17 @@ functions:
           method: get
           cors: true
           integration: lambda
+  scrape_igp:  # Nueva función para scraping de sismos IGP
+    handler: scrap_igp.lambda_handler
+    package:
+      include:
+        - ./**
+    events:
+      - http:
+          path: /scrape/igp
+          method: get
+          cors: true
+          integration: lambda
 
 resources:
   Resources:
@@ -42,3 +53,15 @@ resources:
       Type: AWS::S3::Bucket
       Properties:
         BucketName: my-s3rrh-bucket-${sls:stage}-${aws:accountId}
+    
+    TablaSismosIGP:  # Nueva tabla para almacenar los sismos del IGP
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: TablaSismosIGP
+        AttributeDefinitions:
+          - AttributeName: id
+            AttributeType: S
+        KeySchema:
+          - AttributeName: id
+            KeyType: HASH
+        BillingMode: PAY_PER_REQUEST
